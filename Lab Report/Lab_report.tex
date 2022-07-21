@@ -1,0 +1,582 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsfonts, amsmath, amssymb}
+\usepackage{physics}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{pdflscape}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\setcounter{MaxMatrixCols}{20}
+\setlength\parindent{0pt}
+
+\title{Lab Report \\[1ex] \large Coding Theory for Storage and Networks}
+\author{David de Andrés Hernández\\
+\small Technical University of Munich\\
+\small deandres.hernandez@tum.de}
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%Your abstract.
+%\end{abstract}
+
+\section*{Lab 1: Regenerating Codes}
+
+In this lab, we consider a distributed storage system with n nodes, each nodes stores $\alpha$ symbols, such that a regenerating node can reconstruct the whole storage by contacting any k nodes. The repair degree of the system is d and the repair bandwidth of each node if $\beta$.
+
+\subsection*{Problem 1: MSR Codes by ZigZag Codes}
+In this task, we use an $(n,k = n-2, d=n-1)$ ZigZag code ([Tamo, Wang and Bruck, '11]) to construct an $(n, k, d) = (5,3,4), \alpha =4 , \beta = 2$ Regenerating code. The $(5, 3, 4)$ ZigZag code for the message $u = (u_1,..., u_{12})$ over $\mathbb{F}_3$ is given by:
+	
+\begin{table}[h!]
+\label{tab:ZigZag}
+\caption{Symbols contained at each node}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Node 1 & $u_1$ & $u_2$ & $u_3$ & $u_4$  \\
+\hline
+Node 2 & $u_5$ & $u_6$ & $u_7$ & $u_8$  \\
+\hline
+Node 3 & $u_9$ & $u_{10}$ & $u_{11}$ & $u_{12}$  \\
+\hline
+Node 4 & $u_1+u_5+ u_9$ & $u_2+u_6+u_{10}$ & $u_3+u_7+u_{11}$ & $u_4+u_8+u_{12}$  \\
+\hline
+Node 5 & $u_1+2u_7+ 2u_{10}$ & $u_2+2u_8+u_9$ & $u_3+u_5+u_{12}$ & $u_4+u_6+u_{11}$  \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent We denote the content of storage at each node $i \in \{1,\ldots, 5\}$ by $\vb{s_i}= (s_i^1, s_i^2, s_i^3, s_i^4)$. With this notation, the storage matrix looks as follows
+\begin{equation*}
+\vb{S} = 
+\begin{bmatrix}
+s_1^1 & s_2^1 & s_3^1 & s_4^1 & s_5^1 \\
+s_1^2 & s_2^2 & s_3^2 & s_4^2 & s_5^2 \\
+s_1^3 & s_2^3 & s_3^3 & s_4^3 & s_5^3 \\
+s_1^4 & s_2^4 & s_3^4 & s_4^4 & s_5^4
+\end{bmatrix}.
+\end{equation*}
+
+Moreover, we can now determine the encoding matrix $\vb{A}_i \in M_{m \times n}(\mathbb{F}_3)$, $i = 1, \ldots,5$ of each user such that $\vb{s_i}= \vb{A}_i\vb{u}$:
+
+\begin{equation*}
+\vb{A}_1 = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
+\end{bmatrix}
+\\
+\vb{A}_2 =  
+\begin{bmatrix}
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+\vb{A}_3 = 
+\begin{bmatrix}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 
+\end{bmatrix}
+\\
+\vb{A}_4 = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+\vb{A}_5 = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 2 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 2 & 1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 2 & 0 
+\end{bmatrix}
+\end{equation*}
+Now, before computing every $\vb{s_i}= \vb{A}_i\vb{u}$, we retrieve the system's time and after the calculation, we retrieve it again. The difference is the time required for the encoding. We measured $0.014721870422363281$s.\\
+
+To continue, we simulate that node 1 has failed and we want to repair it with minimum bandwidth. First, we determine which $t=2$ symbols must be downloaded from each node. According to table \ref{tab:ZigZag}, we observe that $u_1$ is still available at the parity (node 4) as $u_1+u_5+u_9$ at position 1 ($s_4^1$). So we download this parity symbol. This in turn dictates that we must download both $u_5 \text{ and } u_9$ to subtract them. They are available at position 1 from nodes 2  and 3; $s_2^1$ and $s_3^1$ respectively. In the same way, to recover $u_4$ we must download both the parity symbol at position 4 ($s_4^4$), as well as symbol 4 from nodes 2 and 3; $s_2^4$ and $s_3^4$ respectively. Furthermore, a nice property of ZigZag codes, is that the remaining required symbols can be recovered from $t=2$ additional ZigZag symbols from node 5. For this reason, we download symbols 2 and 3 from Node 5; ; $s_5^2$ and $s_5^3$ respectively. Summarizing, the collection of downloaded symbols are
+\begin{align*}
+\vb{d_2} &= (s_2^1, s_2^4) \\
+\vb{d_3} &= (s_3^1, s_3^4) \\
+\vb{d_4} &= (s_4^1, s_4^4) \\
+\vb{d_5} &= (s_5^2, s_5^3).
+\end{align*}
+
+It is now mathematically possible for the regenerating node to recover all symbols which where stored at node 1, as follows
+\begin{align*}
+\hat{u}_1^1 &= d_4^1 - d_2^1 - d_3^1 \\
+\hat{u}_1^2 &= d_5^1 - 2d_2^2 - d_3^1 \\
+\hat{u}_1^3 &= d_5^2 - d_2^1 - d_3^2 \\
+\hat{u}_1^4 &= d_4^2 - d_2^2 - d_3^2.
+\end{align*}
+And the repaired node is $\vb{s_1}= (\hat{s}_1^1,\hat{s}_1^2,\hat{s}_1^3, \hat{s}_1^4) = (u_1, u_2, u_3, u_4)$.
+
+Under the assumption that downloading one symbol consumes one second. We can calculate that the repair time is:
+\begin{equation*}
+1[s] \times \text{\#downloaded symbols} + \text{decoding time}[s] = 8.006059646606445 [s].
+\end{equation*} 
+In contrast, if we wish to recover the message, we shall download all information symbols $u_1,\cdots,u_{12}$. This means, we must download 4 symbols from nodes 1,2, and 3. The recover time in this case is:
+\begin{equation*}
+1[s] \times \text{\#information symbols} = 12 [s].
+\end{equation*} 
+It is clear that it is more efficient to restore one node, using a regenerating code than using just a plain MDS code which would require to retrieve all remaining available symbols for the restoration.
+
+\subsection*{Problem 2: MSR Codes by Product Matrix Codes}
+In this task, we use an $(n,k,d=2k-2)$ Product Matrix Code ([Rashmi, Shah and Kumar, '11]) to construct an $(n, k, d) = (5, 3, 4)$ Regenerating Code over $\mathbb{F}_{13}$. Let the information stored be $u = (2, 2, 3, 5, 6, 10)$. 
+We begin by computing the MSR point
+\begin{equation*}
+\alpha_{MSR} = d - k +1 = k-1 = 2
+\end{equation*}
+\begin{equation*}
+\beta_{MSR}=\dfrac{B}{k(d-k+1)}=\dfrac{6}{3(4-3+1)}=1.
+\end{equation*}
+To continue, we define the $(d \times \alpha)$ message matrix $M$ as:
+\begin{equation*}
+\vb{M} = \begin{bmatrix} S_1\\ S_2 \end{bmatrix}
+\end{equation*} 
+
+where $S_1$ and $S_2$ are $(\alpha \times \alpha)$ symmetric matrices constructed such that the ${\alpha + 1}\choose{2}$ entries in the upper-triangular part of each of the two matrices are filled up by ${\alpha + 1}\choose{2}$ distinct message symbols. Thus, all the $B=\alpha(\alpha+1)$ message symbols are contained in the two matrices $S_1$ and $S_2$. The entries in the strictly lower-triangular portion of the two matrices $S_1$ and $S_2$ are chosen so that the matrices are symmetric. Plugging in the values we obtain
+\begin{equation*}
+\vb{M} =
+\begin{bmatrix}
+2 & 2 \\
+2 & 3 \\
+5 & 6 \\
+6 & 10 \\
+\end{bmatrix}.
+\end{equation*}
+
+Next, we define the encoding matrix $\psi $ to be a $(n\times d)$ matrix given by $\Psi = [\Phi\ \Lambda\Phi]$ where $\Phi$ is an $(n \times \alpha)$ matrix and $\Lambda$ is an $(n\times n)$ \textbf{diagonal matrix}.\\
+
+The elements of $\Psi$ are chosen such that the following conditions are satisfied:
+\begin{enumerate}
+\item Any $d$ rows of $\Psi$ are linearly independent;
+\item Any $\alpha$ rows of $\Phi$ are linearly independent;
+\item The $n$ diagonal elements of $\Lambda$  are distinct.
+\end{enumerate}
+
+The above requirements can be met, for example, by choosing $\Psi$ to be a Vandermonde matrix with elements chosen carefully to satisfy the third condition. In this case, let the $i$th row of $\Psi$ be $\psi_i = [1\ x_i \ ... \ {x_i}^{d-1} ]$, which gives $\Lambda = diag\{{x_1}^{\alpha}, {x_2}^{\alpha}, ... , {x_n}^{\alpha}\}$. In order to satisfy the third property, one may choose $F_q$ to be any field of size $n(d-k+1)$ or higher, with $x_i= g^{i-1}$, where $g$ is the generator of the multiplicative group of the finite field $F_q$. We observe that the size of $\mathbb{F}_{13}$ fulfils the requirement. Moreover, we begin the code with a search for a primitive element $g$ which generates $\mathbb{F}_{13}\setminus\{0\}$. We find that $g=2$ is a a possible solution and proceed
+
+\begin{equation*}
+\vb{\Psi} = [\Phi \text{ }\Lambda\Phi] =
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+1 & 2 & 4 & 8 \\
+1 & 4 & 3 & 12 \\
+1 & 8 & 12 & 5 \\
+1 & 3 & 9 & 1 
+\end{bmatrix}.
+\end{equation*}
+
+Hence the $(5 \times 2)$ matrix $\Phi$ and the $(5 \times 5)$ diagonal matrix $\Lambda$ are
+\begin{equation*}
+\vb{\Phi} =
+\begin{bmatrix}
+1 & 1\\
+1 & 2\\
+1 & 4\\
+1 & 8\\
+1 & 3
+\end{bmatrix},\\
+\vb{\Lambda} = 
+\begin{bmatrix}
+1 & & & & \\
+& 4 & & & \\
+& & 3 & & \\
+& & & 12 & \\
+& & & & 9
+\end{bmatrix}.
+\end{equation*}
+
+We encode the information by $S=\Psi M$ and obtain
+
+\begin{equation*}
+\vb{S} =
+\begin{bmatrix}
+2 & 8 \\
+9 & 8 \\
+6 & 9 \\
+4 & 5 \\
+7 & 10 \\
+\end{bmatrix}
+\end{equation*}
+
+\subsubsection{Exact Regeneration}
+We now assume that node 4 has failed and we would like to repair the node. This means we must contact $d=4$ other nodes and download $\beta=1$ symbols to repair node 4. The process begins with each node sending the inner product $\vb{\psi}_{l}^t M[1,8]^t$ for $l = 1,2,3,5$ to the  regenerating node. Moreover, the  regenerating node builds the $\Psi_{\text{repair}}$ matrix, which originates from deleting from $\Psi$ the row corresponding to the node to be repaired, 4 in this case. $\Psi_{\text{repair}}$ is
+\begin{equation*}
+\Psi_{\text{repair}} =
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+1 & 2 & 4 & 8 \\
+1 & 4 & 3 & 12 \\
+1 & 3 & 9 & 1 
+\end{bmatrix}.
+\end{equation*}
+
+The regenerating node now multiplies the downloaded symbols with $\Psi_{\text{repair}}^{-1}$ and obtains:
+\begin{equation*}
+\begin{bmatrix}
+\vb{S_1}\vb{\phi_4}\\
+\vb{S_2}\vb{\phi_4}\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+u_1+8u_2 \\
+u_2+8u_3 \\
+u_4+8u_5 \\
+u_5+8u_6 \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+5 \\
+0 \\
+1 \\
+8 \\
+\end{bmatrix}.
+\end{equation*}
+Finally, using the locator $\lambda_4 = 12$, the DC reconstructs node 4 as:
+\begin{equation*}
+\vb{s_4} = [(u_1 + u_2)+\lambda_4(u_4 + u_5), (u_2 + u_3)+\lambda_4(u_5 + u_6)] = [5+12\times 1, 0 + 12\times 8] = [4, 5].
+\end{equation*}
+
+Under the assumption that downloading one symbol consumes one second. We can calculate that the repair time is:
+\begin{equation*}
+1[s] \times \text{\#downloaded symbols} + \text{decoding time}[s] = 4.002313613891602 [s].
+\end{equation*}
+
+\subsubsection{Data Reconstruction}
+To reconstruct the file, the data collector contacts $k=3$ node; i.e. Nodes 1,2,3. It builds 
+\begin{equation*}
+\vb{\Psi}_{\text{DC}} =
+\begin{bmatrix}
+\Phi_{\text{DC}} & \Lambda_{\text{DC}}\Phi_{\text{DC}} \\
+\end{bmatrix} =  
+\begin{bmatrix}
+1 & 1 \\
+1 & 2 \\
+1 & 4
+\end{bmatrix}
+\end{equation*}
+Next, it receives the symbols matrix
+\begin{equation*}
+\vb{S}_{\text{DC}} =
+\begin{bmatrix}
+2 & 8 \\
+9 & 8 \\
+6 & 9 
+\end{bmatrix}.
+\end{equation*}
+which corresponds to 
+\begin{equation*}
+\vb{S}_{\text{DC}} = \vb{\Psi}_{\text{DC}}\vb{M} =
+\begin{bmatrix}
+\Phi_{\text{DC}} & \Lambda_{\text{DC}}\Phi_{\text{DC}} \\
+\end{bmatrix}
+\begin{bmatrix}
+\vb{S_1} \\
+\vb{S_2}
+\end{bmatrix} =
+\begin{bmatrix}
+\Phi_{\text{DC}}\vb{S_1} & \Lambda_{\text{DC}}\Phi_{\text{DC}}\vb{S_2} \\
+\end{bmatrix}
+\end{equation*}
+The data collector can post-multiply this term with $\Phi_{\text{DC}}^T$, obtaining
+\begin{equation*}
+\vb{S}_{\text{DC}} \Phi_{\text{DC}}^T =
+\begin{bmatrix}
+10 & 5 & 8 \\
+4 & 12 & 2 \\
+2 & 11 & 3 
+\end{bmatrix}
+\doteq 
+\vb{R}
+\end{equation*}
+from which we are interested in the non-diagonal elements to construct a system of equations. To solve it, we define the matrices $P$ and $Q$ as
+\begin{align*}
+\vb{P} &= \Phi_{\text{DC}}\vb{S_1} \Phi_{\text{DC}}^T \\
+\vb{Q} &= \Phi_{\text{DC}}\vb{S_2} \Phi_{\text{DC}}^T .
+\end{align*}
+Now, we can rewrite the $(i, j)$th, $1 \leq i, j\leq k$, element of $\vb{R}$ as
+\begin{equation*}
+P_{ij} + \lambda_iQ_{ij},
+\end{equation*}
+while the $(j,i)$th element is given by
+\begin{equation*}
+P_{ji} + \lambda_jQ_{ji} = P_{ij} + \lambda_iQ_{ij}
+\end{equation*}
+thanks to the symmetry of P and Q. The data collector can now solve for the values of $P_{ij}$ and $Q_{ij}$ for all $i \neq j$. We obtain
+\begin{align*}
+\begin{bmatrix}
+1 & 1\\
+1 & 4
+\end{bmatrix}
+\begin{bmatrix}
+P_{12}\\
+Q_{12}
+\end{bmatrix}
+&=
+\begin{bmatrix}
+5\\
+4
+\end{bmatrix}
+\Rightarrow
+P_{12}=1, Q_{12}=4\\
+\begin{bmatrix}
+1 & 1\\
+1 & 3
+\end{bmatrix}
+\begin{bmatrix}
+P_{13}\\
+Q_{13}
+\end{bmatrix}
+&=
+\begin{bmatrix}
+8\\
+2
+\end{bmatrix}
+\Rightarrow
+P_{13}=11, Q_{13}=10\\
+\begin{bmatrix}
+1 & 4\\
+1 & 3
+\end{bmatrix}
+\begin{bmatrix}
+P_{23}\\
+Q_{23}
+\end{bmatrix}
+&=
+\begin{bmatrix}
+2\\
+11
+\end{bmatrix}
+\Rightarrow
+P_{23}=12, Q_{23}=4.
+\end{align*}
+We can reconstruct the $P$ and $Q$ matrices as
+\begin{equation*}
+\vb{P}=
+\begin{bmatrix}
+* & 1 & 11 \\
+1 & * & 12 \\
+11 & 12 & *
+\end{bmatrix},
+\vb{Q}=
+\begin{bmatrix}
+* & 4 & 10 \\
+4 & * & 4 \\
+10 & 4 & *
+\end{bmatrix}
+\end{equation*}
+To finish, we need to recover $\vb{S_1}$ and $\vb{S_2}$ from $\vb{P}$ and $\vb{Q}$; we can exploit the fact that the matrix is symmetric. Furthermore, we construct a system of 3 equations for each of the matrices as $\Phi_{\text{DC}}$ and $\Phi_{\text{DC}}^T$ are known to the data-collector. After solving, we obtain $\vb{u} = (2, 2, 3, 5, 6, 10)$.
+
+Under the assumption that downloading one symbol consumes one second. We can calculate that the retrieval time is:
+\begin{equation*}
+1[s] \times \text{\#downloaded symbols} + \text{decoding time}[s] = 6.009028673171997
+\end{equation*}
+We observe again that it is more efficient to repair a node than to recover a file. In conclusion, Regenerating codes are ideal for maintaining a high availability of the data so that the data is resilient to possible errors. However, the price to pay is the increased complexity to retrieve the original data. Whether to use these codes depends on how often the data must be accessed.
+\bibliographystyle{alpha}
+\section*{Lab 2: Interleaved Reed-Solomon Codes}
+
+\subsection*{Problem 1: Homogeneus IRS Code}
+Let $\mathcal{C}_1$ denote an IRS code consisting of $l = 2$ Reed–Solomon codes $\mathcal{RS}(15, 8)$ over $\mathbb{F}_{2^4}$.
+Assume that the codewords of $\mathcal{C}_1$ were transmitted over a bursty channel and we therefore choose a common error-locator polynomial for both Reed–Solomon (RS) codes in the decoding process.
+
+We first wish to calculate the decoding radius $t_{\text{max},1}$ of $\mathcal{C}_1$ for collaborative IRS decoding. We know the result
+\begin{align*}
+t_{\text{max}} \doteq \lfloor \dfrac{l}{l+1}(n-k) \rfloor = \lfloor \dfrac{l}{l+1}(d-1) \rfloor.
+\end{align*}
+Plugging in the values we obtain $t_{\text{max}} = 4$.
+
+Furthermore, we would like to encode 4 random vectors over $\mathcal{GF}(2^4)$ of length $k=8$, which turn to be
+\begin{align*}
+\vb{u_{1}} &= (a^3 + a + 1, a^3 + a, a, a^3 + a^2, 1, a^2 + 1, a^2, a + 1) \\
+\vb{u_{2}} &= (a^2 + a, a^3 + a + 1, a, a^2, a^3 + a^2 + 1, a^3 + a^2 + 1, a^3 + a^2 + a, a + 1) \\
+\vb{u_{3}} &= (a^2, 0, a, a^2 + a, a^2 + a, 0, a^3 + 1, a^2 + a + 1) \\
+\vb{u_{4}} &= (0, 1, a^2 + a, a^3 + a + 1, a^3 + 1, 1, a^2 + a + 1, a^2 + a)
+\end{align*}
+\newpage
+We use Sage to obtain the generator matrix
+\begin{minted}{python}
+k = 8
+p = 2
+m = 4
+q = p^m
+F.<a> = GF(q, modulus = 'primitive')
+# IRS code
+n = q - 1 # code length
+# Given evaluation points and a RS construction
+L = [a^i for i in range(n)]
+RS1 = codes.GeneralizedReedSolomonCode(L, k_1)
+G1 = RS1.generator_matrix()
+\end{minted}
+and encode the vectors
+\begin{align*}
+\vb{c_{1}} &= \vb{u_{1}}\vb{G_1}\\
+\vb{c_{2}} &= \vb{u_{2}}\vb{G_1}\\
+\vb{c_{3}} &= \vb{u_{3}}\vb{G_1}\\
+\vb{c_{4}} &= \vb{u_{4}}\vb{G_1}.
+\end{align*} 
+
+Moreover, we define two error vectors $e_1$ and $e_2$ whose non-zero positions are
+\begin{equation*}
+e_1^1 = a^2, e_1^5 = a^4, e_1^9 = a^{10}, e_1^{10} = a^3
+\end{equation*} 
+\begin{equation*}
+e_2^1 = a^6, e_2^5 = a^7, e_2^9 = a^2, e_2^{10} = a^3.
+\end{equation*} 
+And the received vectors become
+\begin{align*}
+\vb{r_1} &= \vb{e_1} + \vb{c_1} \\
+\vb{r_2} &= \vb{e_2} + \vb{c_2} \\
+\vb{r_3} &= \vb{e_1} + \vb{c_3} \\
+\vb{r_4} &= \vb{e_2} + \vb{c_4} 
+\end{align*}
+\bibliography{sample}
+whose syndrome is computed as
+\begin{align*}
+\vb{s_{1}} &= \vb{r_{1}}\vb{H_1^\intercal}\\
+\vb{s_{2}} &= \vb{r_{2}}\vb{H_1^\intercal}\\
+\vb{s_{3}} &= \vb{r_{3}}\vb{H_1^\intercal}\\
+\vb{s_{4}} &= \vb{r_{4}}\vb{H_1^\intercal}.
+\end{align*}
+While the error locations are equal, we observe that the syndromes $s_{1} = s_{3}$ and $s_{2} = s_{4}$ are pairwise equal. Which means that by using two different syndromes, we shall be able to decode further than the MDS decoding radius.
+
+The next step is to implement a function \textit{irs\_decoding()} that returns the error positions given the syndrome. For this we construct the key-equation for joint error location
+\begin{align*}
+\vb{S_t}\cdot\vb{\Lambda_t} &= \vb{T_t}\\
+\begin{bmatrix}
+\vb{S_t^{(1)}}\\
+\vb{S_t^{(2)}}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\Lambda_1 \\
+\Lambda_2 
+\end{bmatrix}
+&=
+\begin{bmatrix}
+\vb{T_t^{(1)}} \\
+\vb{T_t^{(2)}}
+\end{bmatrix}
+\end{align*}
+where the matrices with syndrome coefficients are
+\begin{equation*}
+\vb{S_t^{(j)}} = 
+\begin{bmatrix}
+s_{(j)}^{t-1} & \cdots & s_{(j)}^1 & s_{(j)}^0\\
+s_{(j)}^t & \cdots & s_{(j)}^2 & s_{(j)}^1\\
+\vdots & \ddots & \\
+s_{(j)}^{2t-2} & \cdots & s_{(j)}^t & s_{(j)}^{t-1}
+\end{bmatrix}, \forall j=1,\cdots,l.
+\end{equation*}
+Moreover, we use an iterative algorithm to find t. The algorithm begins by setting $t = \lfloor \dfrac{d-1}{2}\rfloor$ and $\vb{S_t}$ as above. Then, while $\vb{S_t}$ remains Singular, we decrease t and set $\vb{S_t}$ again. We iterate this process until $\vb{S_t}$ is non-singular. Plugging in the problem values we obtain t=4. We have now a linear system of equations which we can solve for $\vb{\Lambda}$. Finally, we set the error locator polynomial
+\begin{equation*}
+\Lambda(x) = 1 + \sum_{i=1}^4{\Lambda_i}x^i = (a^2 + a + 1)x^4 + (a^3 + a^2 + a + 1)x^3 + (a^3 + a^2 + a)x^2 + (a^3 + 1)x + 1
+\end{equation*}
+and iterate over $\Lambda(x)$ evaluated at the inverses of the RS's evaluation points as
+\begin{equation*}
+\Lambda(\alpha_i^{-1}) = 0 \Leftrightarrow i \in \mathcal{E}.
+\end{equation*}
+This yields that the error locations are $\mathcal{E} = \{1, 5, 9, 10\}$.
+
+\subsection*{Problem 2: Heterogeneous IRS Code}
+We extend $\mathcal{C}_1$ to a heterogeneous IRS code $\mathcal{C}_2$ of interleaving order $l = 3 $ by adding an $\mathcal{RS}$ code over $\mathbb{F}_{2^4}$ of length $n = 15$ and dimension $k_2 = 6$. We assume one common error-locator polynomial for all three RS codes.
+
+First, we compute the new decoding radius $t_{\text{max},1}$ of $\mathcal{C}_1$ for collaborative IRS decoding. This time, we need the average dimension $\overline{k}$. Plugging in the values we obtain $t_{\text{max}} = 5$. We are able to correct an additional error. Because of the additional RS code, we also obtain an additional syndrome, which we denote $\vb{s_5}$
+The decoding procedure follows the same process as in Problem 1, although this time each syndrome will not yield the same number of equations for the joint decoding. Furthermore, we observe that we don't need all the syndromes. Because  $t_{\text{max}} = 5$ , we only need 5 equations. With  $\vb{s_5}$  and  $\vb{s_1}$  we already have 6 equations for decoding. Finally, the location of the errors are this time $\mathcal{E} = \{1, 5, 9, 10, 12\}$.
+
+\subsection*{Problem 3: Virtual Interleaving (Power Decoding)}
+In order to decode the $\mathcal{RS}(15, 2)$ code over $\mathbb{F}_{2^4}$ beyond half the minimum distance, we extend it virtually to a heterogeneous IRS code. For this problem $k=2$, the random information vector $u=(a^3 + a^2 + a, a^3 + a^2 + a)$, and the error
+\begin{equation*}
+e=(a^5, 0, a^2, a^6, a^1, 0, a, 0, 0, a^5, 0, a^6, 0, a^7, a^9).
+\end{equation*}
+The received codeword is therefore,
+\begin{equation*}
+y=(a^2 + a, 1, a^2 + a + 1, a^3 + a + 1, a^3 + a^2 + 1, a^3 + a^2, a^3, a^2 + a, a^3 + a^2 + 1, a^3 + a^2 + a, a, a^3 + 1, a^3 + a + 1, a^3 + a^2 + a + 1, a + 1).
+\end{equation*} 
+We begin by calculating the maximal decoding radii $t_{\text{max}} =\max_{i=2,\cdots,6}t_{\text{max}}^{(i)}$ and determine $i_{\text{max}}$
+\begin{align*}
+i=2, t_{max}(2) = 8\\
+i=3, t_{max}(3) = 9\\
+i=4, t_{max}(4) = 9\\
+i=5, t_{max}(5) = 9\\
+i=6, t_{max}(6) = 9.
+\end{align*}
+We select $i=3$, which is the smallest $i$ producing $t_{\text{max}}$. Further we implement the function \textit{Power\_dec()}, which makes use of \textit{irs decoding()} to power decode the $\mathcal{RS}(15, 2)$. The resulting program listing is
+\begin{minted}{python}
+def Power_dec(F, k, y, t_max, i_max):
+    """
+    Perform power decoding for a received RS codeword. i.e. construct a virtual IRS by
+    powering the RS codeword, then do IRS decoding.
+    Inputs:
+        F: the finite field
+        k: the dimension of the RS code
+        y: the received RS codewords
+        t_max: the maximum decoding radius
+        i_max: the sufficient virtual interleaving order to obtain tmax
+    """
+    L = [a^i for i in range(n)] # evaluation points for RS code construction
+    s_vec = [] # list of syndromes of virtual IRS code
+    for i in range(1, i_max + 1):
+    # The power decoding algorithm has to do the following steps:
+        # Calculate element-wise power of the received word
+        y_i = y.apply_map(lambda x: x^i)
+
+        # Calculate the dimensions of virtual codes
+        k_i = i * (k - 1) + 1
+        RS_i = codes.GeneralizedReedSolomonCode(L, k_i)
+
+        # Calculate original syndrome and virtual syndromes
+        H_i = RS_i.parity_check_matrix()
+        s_vec.append(y_i * H_i.transpose())
+    # Calculate the error locations using irs_decoding()
+    [errloc, t] = irs_decoding(F, t_max, s_vec)
+
+    return errloc, t
+   
+\end{minted}
+
+where we have followed these steps
+\begin{enumerate}
+\item Calculate the element-wise powers of the received word up to interleaving order $i_{\text{max}}$ to obtain $y_i$, for $i = 2, \cdots, i_{\text{max}}$
+\item Calculate the dimensions $k_i,$ for $i = 2, \cdots, i_{\text{max}}$ of the virtual codes;
+\item Calculate the corresponding syndromes $s_i$, for $i = 2, \cdots, i_{\text{max}}$ where $s_1$ denotes the syndrome of the original received word
+\item Calculate the error positions by solving a system of equations
+\end{enumerate}
+The \textit{Power\_dec()} returns the correct error positions,  $\mathcal{E} = \{0, 2, 3, 4, 6, 9, 11, 13, 14\}$.
+
+To conclude, we have observed that power decoding allows us to extend the decoding radius from 5, when using an heterogeneous IRS, to 9, when using power decoding. In the next problem we study the failure probability of this algorithm.
+
+\subsection*{Decoding Failure of Power Decoding}
+To analyse the chances of decoding failure, we run power decoding over 1000 random error vectors of length 15 and weight $t_{\text{max}}$
+and calculate the failure probability.
+
+We begin by generating the random error vectors. This task has to be done carefully since I haven't found a way to shuffle a vector in sage after sampling $t_max $ non-zero values and padding until the required length n. For this reason, we sample n values and then correct the weight of the vector. If by some chances, the vector is still not of the desired weight, we continue generating until they satisfy the requirements. The results yield percentages in the range $(7,10)\%$ which is not bad, but deviates from the expected value $6.6667\%$. This can be because of some imperfections in the power decoding algorithm which may raise some exceptions which are treated as decoding failure erroneously.
+
+
+\end{document}

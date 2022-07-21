@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{8}
+\PYG{n}{p} \PYG{o}{=} \PYG{l+m+mi}{2}
+\PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{q} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZca{}}\PYG{n}{m}
+\PYG{n}{F}\PYG{o}{.\PYGZlt{}}\PYG{n}{a}\PYG{o}{\PYGZgt{}} \PYG{o}{=} \PYG{n}{GF}\PYG{p}{(}\PYG{n}{q}\PYG{p}{,} \PYG{n}{modulus} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}primitive\PYGZsq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} IRS code}
+\PYG{n}{n} \PYG{o}{=} \PYG{n}{q} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1} \PYG{c+c1}{\PYGZsh{} code length}
+\PYG{c+c1}{\PYGZsh{} Given evaluation points and a RS construction}
+\PYG{n}{L} \PYG{o}{=} \PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZca{}}\PYG{n}{i} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]}
+\PYG{n}{RS1} \PYG{o}{=} \PYG{n}{codes}\PYG{o}{.}\PYG{n}{GeneralizedReedSolomonCode}\PYG{p}{(}\PYG{n}{L}\PYG{p}{,} \PYG{n}{k\PYGZus{}1}\PYG{p}{)}
+\PYG{n}{G1} \PYG{o}{=} \PYG{n}{RS1}\PYG{o}{.}\PYG{n}{generator\PYGZus{}matrix}\PYG{p}{()}
+\end{Verbatim}

@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{Power\PYGZus{}dec}\PYG{p}{(}\PYG{n}{F}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{t\PYGZus{}max}\PYG{p}{,} \PYG{n}{i\PYGZus{}max}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{    Perform power decoding for a received RS codeword. i.e. construct a virtual IRS by}
+\PYG{l+s+sd}{    powering the RS codeword, then do IRS decoding.}
+\PYG{l+s+sd}{    Inputs:}
+\PYG{l+s+sd}{        F: the finite field}
+\PYG{l+s+sd}{        k: the dimension of the RS code}
+\PYG{l+s+sd}{        y: the received RS codewords}
+\PYG{l+s+sd}{        t\PYGZus{}max: the maximum decoding radius}
+\PYG{l+s+sd}{        i\PYGZus{}max: the sufficient virtual interleaving order to obtain tmax}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{L} \PYG{o}{=} \PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZca{}}\PYG{n}{i} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]} \PYG{c+c1}{\PYGZsh{} evaluation points for RS code construction}
+    \PYG{n}{s\PYGZus{}vec} \PYG{o}{=} \PYG{p}{[]} \PYG{c+c1}{\PYGZsh{} list of syndromes of virtual IRS code}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i\PYGZus{}max} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{} The power decoding algorithm has to do the following steps:}
+        \PYG{c+c1}{\PYGZsh{} Calculate element\PYGZhy{}wise power of the received word}
+        \PYG{n}{y\PYGZus{}i} \PYG{o}{=} \PYG{n}{y}\PYG{o}{.}\PYG{n}{apply\PYGZus{}map}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{x}\PYG{p}{:} \PYG{n}{x}\PYG{o}{\PYGZca{}}\PYG{n}{i}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Calculate the dimensions of virtual codes}
+        \PYG{n}{k\PYGZus{}i} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{p}{(}\PYG{n}{k} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{n}{RS\PYGZus{}i} \PYG{o}{=} \PYG{n}{codes}\PYG{o}{.}\PYG{n}{GeneralizedReedSolomonCode}\PYG{p}{(}\PYG{n}{L}\PYG{p}{,} \PYG{n}{k\PYGZus{}i}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Calculate original syndrome and virtual syndromes}
+        \PYG{n}{H\PYGZus{}i} \PYG{o}{=} \PYG{n}{RS\PYGZus{}i}\PYG{o}{.}\PYG{n}{parity\PYGZus{}check\PYGZus{}matrix}\PYG{p}{()}
+        \PYG{n}{s\PYGZus{}vec}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{y\PYGZus{}i} \PYG{o}{*} \PYG{n}{H\PYGZus{}i}\PYG{o}{.}\PYG{n}{transpose}\PYG{p}{())}
+    \PYG{c+c1}{\PYGZsh{} Calculate the error locations using irs\PYGZus{}decoding()}
+    \PYG{p}{[}\PYG{n}{errloc}\PYG{p}{,} \PYG{n}{t}\PYG{p}{]} \PYG{o}{=} \PYG{n}{irs\PYGZus{}decoding}\PYG{p}{(}\PYG{n}{F}\PYG{p}{,} \PYG{n}{t\PYGZus{}max}\PYG{p}{,} \PYG{n}{s\PYGZus{}vec}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{errloc}\PYG{p}{,} \PYG{n}{t}
+
+\end{Verbatim}
