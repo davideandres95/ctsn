@@ -4,10 +4,13 @@
 \@nameuse{bbl@beforestart}
 \providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
 \HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
 \global\let\oldnewlabel\newlabel
 \gdef\newlabel#1#2{\newlabelxx{#1}#2}
 \gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
 \AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
 \let\newlabel\oldnewlabel
 \fi}
 \fi}
@@ -15,15 +18,10 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{ZigZag_Codes}
 \babel@aux{english}{}
-\newlabel{tab:ZigZag}{{}{1}{Problem 1: MSR Codes by ZigZag Codes}{section*.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Symbols contained at each node}}{1}{table.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.0.1}Exact Regeneration}{4}{subsubsection.0.0.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.0.2}Data Reconstruction}{4}{subsubsection.0.0.2}\protected@file@percent }
-\bibstyle{alpha}
-\bibdata{sample}
-\gdef\minted@oldcachelist{,
-  default.pygstyle,
-  BB564E0A0DA02C08AE54AD05E2127EEBC8079249C82C66D8799624F4F1A2E08E.pygtex,
-  273D6F5D40A2F5F7A18A43F0E02BB5C5C8079249C82C66D8799624F4F1A2E08E.pygtex}
-\gdef \@abspage@last{8}
+\citation{Prodict_Matrix}
+\citation{Prodict_Matrix}
+\bibcite{ZigZag_Codes}{1}
+\bibcite{Prodict_Matrix}{2}
+\gdef \@abspage@last{6}
