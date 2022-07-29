@@ -39,7 +39,7 @@
 
 \section*{Lab 1: Regenerating Codes}
 \subsection*{Problem 1: MSR Codes by ZigZag Codes}
-In this task, we use an $(n,k = n-2, d=n-1)$ ZigZag code \cite{ZigZag_Codes} to construct an $(n, k, d) = (5,3,4), \alpha =4 , \beta = 2$ Regenerating code. The $(5, 3, 4)$ ZigZag code for the message $u = (u_1,..., u_{12})$ over $\mathbb{F}_3$ is given  in the task sheet.
+In this task, we use an $(n,k = n-2, d=n-1)$ ZigZag code to construct an $(n, k, d) = (5,3,4), \alpha =4 , \beta = 2$ Regenerating code. The $(5, 3, 4)$ ZigZag code for the message $u = (u_1,..., u_{12})$ over $\mathbb{F}_3$ is given  in the task sheet.
 \noindent We denote the content of storage at each node $i \in \{1,\ldots, 5\}$ by $\vb{s_i}= (s_i^1, s_i^2, s_i^3, s_i^4)$. With this notation, the storage matrix looks as follows
 \begin{equation*}
 \vb{S} = 
@@ -126,7 +126,7 @@ In contrast, if we wish to recover the message, we shall download all informatio
 It is clear that it is more efficient to restore one node, using a regenerating code than using just a plain MDS code which would require to retrieve all remaining available symbols for the restoration.
 
 \subsection*{Problem 2: MSR Codes by Product Matrix Codes}
-In this task, we use an $(n,k,d=2k-2)$ Product Matrix Code \cite{Prodict_Matrix} to construct an $(n, k, d) = (5, 3, 4)$ Regenerating Code over $\mathbb{F}_{13}$. Let the information stored be $u = (2, 2, 3, 5, 6, 10)$. 
+In this task, we use an $(n,k,d=2k-2)$ Product Matrix Code to construct an $(n, k, d) = (5, 3, 4)$ Regenerating Code over $\mathbb{F}_{13}$. Let the information stored be $u = (2, 2, 3, 5, 6, 10)$. 
 We begin by computing the MSR point
 \begin{equation*}
 \alpha_{MSR} = d - k +1 = k-1 = 2; \text{ }
@@ -148,7 +148,7 @@ where $S_1$ and $S_2$ are $(\alpha \times \alpha)$ symmetric matrices constructe
 \end{bmatrix}.
 \end{equation*}
 
-Next, we define the encoding matrix $\psi $ to be a $(n\times d)$ matrix given by $\Psi = [\Phi\ \Lambda\Phi]$ where $\Phi$ is an $(n \times \alpha)$ matrix and $\Lambda$ is an $(n\times n)$ \textbf{diagonal matrix}. $\Psi$ is chosen following the definition given in \cite{Prodict_Matrix}. We observe that the size of $\mathbb{F}_{13}$ fulfils the requirement. Moreover, we begin the code with a search for a primitive element $g$ which generates $\mathbb{F}_{13}\setminus\{0\}$. We find that $g=2$ is a a possible solution and proceed
+Next, we define the encoding matrix $\psi $ to be a $(n\times d)$ matrix given by $\Psi = [\Phi\ \Lambda\Phi]$ where $\Phi$ is an $(n \times \alpha)$ matrix and $\Lambda$ is an $(n\times n)$ \textbf{diagonal matrix}. $\Psi$ is chosen to be a Vandermonde matrix with distinct non-zero $\lambda$ elements. We observe that the size of $\mathbb{F}_{13}$ fulfils the requirement. Moreover, we begin the code with a search for a primitive element $g$ which generates $\mathbb{F}_{13}\setminus\{0\}$. We find that $g=2$ is a a possible solution and proceed
 \begin{equation*}
 \vb{\Psi} = [\Phi \text{ }\Lambda\Phi] =
 \begin{bmatrix}
@@ -463,11 +463,11 @@ y=(a^2 + a, 1, a^2 + a + 1, a^3 + a + 1, a^3 + a^2 + 1, a^3 + a^2, a^3, a^2 + a,
 \end{equation*} 
 We begin by calculating the maximal decoding radii $t_{\text{max}} =\max_{i=2,\cdots,6}t_{\text{max}}^{(i)}$ and determine $i_{\text{max}}$
 \begin{align*}
-i=2, t_{max}(2) = 8\\
-i=3, t_{max}(3) = 9\\
-i=4, t_{max}(4) = 9\\
-i=5, t_{max}(5) = 9\\
-i=6, t_{max}(6) = 9.
+i=2, t_{max}(2) &= 8\\
+i=3, t_{max}(3) &= 9\\
+i=4, t_{max}(4) &= 9\\
+i=5, t_{max}(5) &= 9\\
+i=6, t_{max}(6) &= 9.
 \end{align*}
 We select $i=3$, which is the smallest $i$ producing $t_{\text{max}}$. Further we implement the function \textit{Power\_dec()}, which makes use of \textit{irs decoding()} to power decode the $\mathcal{RS}(15, 2)$. I have followed these steps
 \begin{enumerate}
@@ -485,14 +485,13 @@ To analyse the chances of decoding failure, we run power decoding over 1000 rand
 
 We begin by generating the random error vectors. This task has to be done carefully since I haven't found a way to shuffle a vector in sage after sampling $t_max $ non-zero values and padding until the required length n. For this reason, we sample n values and then correct the weight of the vector. If by some chances, the vector is still not of the desired weight, we continue generating until they satisfy the requirements. The results yield percentages in the range $(7,10)\%$ which is not bad, but deviates from the expected value $6.6667\%$. This can be because of some imperfections in the power decoding algorithm which may raise some exceptions which are treated as decoding failure erroneously.
 
-\newpage
-\begin{thebibliography}{1}
-\bibitem{ZigZag_Codes}
-I. Tamo, Z. Wang and J. Bruck, "Zigzag Codes: MDS Array Codes With Optimal Rebuilding," in IEEE Transactions on Information Theory, vol. 59, no. 3, pp. 1597-1616, March 2013, doi: 10.1109/TIT.2012.2227110.
+%\begin{thebibliography}{1}
+%\bibitem{ZigZag_Codes}
+%I. Tamo, Z. Wang and J. Bruck, "Zigzag Codes: MDS Array Codes With Optimal Rebuilding," in IEEE Transactions on Information Theory, vol. 59, no. 3, pp. 1597-1616, March 2013, doi: 10.1109/TIT.2012.2227110.
+%%
+%\bibitem{Prodict_Matrix}
+%K. V. Rashmi, N. B. Shah and P. V. Kumar, "Optimal Exact-Regenerating Codes for Distributed Storage at the MSR and MBR Points via a Product-Matrix Construction," in IEEE Transactions on Information Theory, vol. 57, no. 8, pp. 5227-5239, Aug. 2011, doi: 10.1109/TIT.2011.2159049.
 %
-\bibitem{Prodict_Matrix}
-K. V. Rashmi, N. B. Shah and P. V. Kumar, "Optimal Exact-Regenerating Codes for Distributed Storage at the MSR and MBR Points via a Product-Matrix Construction," in IEEE Transactions on Information Theory, vol. 57, no. 8, pp. 5227-5239, Aug. 2011, doi: 10.1109/TIT.2011.2159049.
-
-\end{thebibliography}
+%\end{thebibliography}
 
 \end{document}
